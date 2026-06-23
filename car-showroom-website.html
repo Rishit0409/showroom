@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoVogue India | Premium Car Showroom | Buy, Sell, Test Drive Luxury Cars</title>
+<meta name="description" content="India's most viral premium car showroom. Buy new & used luxury cars with 360° view, EMI, test drive, RC check & instant UPI token booking. Pan India delivery.">
+<meta name="keywords" content="car showroom India, luxury cars India, buy car online, Mercedes showroom, BMW Delhi, Audi Mumbai, Tesla India, used cars Bangalore, EMI calculator, RC check">
+<meta name="author" content="AutoVogue India">
+<meta property="og:title" content="AutoVogue India | Premium Car Showroom">
+<meta property="og:description" content="Experience India's most premium digital car showroom with 3D view, instant booking & UPI payments">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1200&auto=format">
+<meta name="theme-color" content="#0B0B0F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.8.1/dist/vanilla-tilt.min.js"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+    :root {
+        --bg: #0B0B0F;
+        --bg-secondary: #121217;
+        --card: #171721;
+        --text: #F5F5F7;
+        --text-secondary: #A1A1AA;
+        --accent: #6E56CF;
+        --accent-2: #00D4AA;
+        --border: #27272A;
+    }
+    
+    [data-theme="light"] {
+        --bg: #FAFAFA;
+        --bg-secondary: #FFFFFF;
+        --card: #FFFFFF;
+        --text: #18181B;
+        --text-secondary: #52525B;
+        --accent: #5B42C2;
+        --accent-2: #00B894;
+        --border: #E4E4E7;
+    }
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    html {
+        scroll-behavior: smooth;
+    }
+    
+    body {
+        font-family: 'Outfit', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        transition: background 0.3s ease, color 0.3s ease;
+        overflow-x: hidden;
+    }
+    
+    h1, h2, h3 {
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 700;
+    }
+    
+    .glass {
+        background: rgba(23, 23, 33, 0.6);
+        backdrop-filter: blur(16px);
+        border: 1px solid var(--border);
+    }
+    
+    [data-theme="light"] .glass {
+        background: rgba(255, 255, 255, 0.7);
+    }
+    
+    .gradient-text {
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .gradient-border {
+        position: relative;
+    }
+    
+    .gradient-border::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes pulse-ring {
+        0% {
+            box-shadow: 0 0 0 0 rgba(110, 86, 207, 0.7);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(110, 86, 207, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(110, 86, 207, 0);
+        }
+    }
+    
+    .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease forwards;
+    }
+    
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+    
+    .story-ring {
+        background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        padding: 3px;
+    }
+    
+    .story-ring.seen {
+        background: var(--border);
+    }
+    
+    .parallax {
+        transition: transform 0.1s ease-out;
+    }
+    
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 999;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(8px);
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    .modal.active {
+        display: flex;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    .range-slider {
+        -webkit-appearance: none;
+        height: 4px;
+        border-radius: 2px;
+        background: var(--border);
+        outline: none;
+    }
+    
+    .range-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--accent);
+        cursor: pointer;
+    }
+    
+    .toast {
+        position: fixed;
+        bottom: 100px;
+        right: 20px;
+        z-index: 1000;
+        transform: translateX(400px);
+        transition: transform 0.3s ease;
+    }
+    
+    .toast.show {
+        transform: translateX(0);
+    }
+    
+    @media (max-width: 390px) {
+        .hero-title {
+            font-size: 2.5rem !important;
+        }
+    }
+</style>
+</head>
+<body data-theme="dark">
+    <!-- Header -->
+    <header class="fixed top-0 w-full z-50 glass">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-8">
+                    <div class="text-2xl font-bold gradient-text">AutoVogue</div>
+                    <div class="hidden md:flex items-center gap-6 text-sm">
+                        <a href="#hero" class="hover:text-[var(--accent)] transition">Home</a>
+                        <a href="#featured" class="hover:text-[var(--accent)] transition">Cars</a>
+                        <a href="#calculator" class="hover:text-[var(--accent)] transition">EMI</a>
+                        <a href="#sell" class="hover:text-[var(--accent)] transition">Sell Car</a>
+                        <a href="#contact" class="hover:text-[var(--accent)] transition">Contact</a>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button id="themeToggle" class="p-2 rounded-lg hover:bg-[var(--card)] transition">
+                        <i data-lucide="sun" class="w-5 h-5"></i>
+                    </button>
+                    <button id="adminBtn" class="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg glass hover:bg-[var(--card)] transition text-sm">
+                        <i data-lucide="lock" class="w-4 h-4"></i>
+                        Admin
+                    </button>
+                    <button id="mobileMenuBtn" class="md:hidden p-2">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-[var(--bg-secondary)] border-t border-[var(--border)]">
+            <div class="px-4 py-3 space-y-2">
+                <a href="#hero" class="block py-2 hover:text-[var(--accent)]">Home</a>
+                <a href="#featured" class="block py-2 hover:text-[var(--accent)]">Cars</a>
+                <a href="#calculator" class="block py-2 hover:text-[var(--accent)]">EMI Calculator</a>
+                <a href="#sell" class="block py-2 hover:text-[var(--accent)]">Sell Car</a>
+                <a href="#contact" class="block py-2 hover:text-[var(--accent)]">Contact</a>
+                <button id="adminBtnMobile" class="w-full text-left py-2 hover:text-[var(--accent)]">Admin Panel</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <video autoplay muted loop playsinline class="w-full h-full object-cover opacity-40">
+                <source src="https://cdn.coverr.co/videos/coverr-a-car-driving-on-a-coastal-road-2489/1080p.mp4" type="video/mp4">
+            </video>
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[var(--bg)] to-[var(--bg)]"></div>
+        </div>
+        
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="animate-fadeInUp">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6">
+                        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                        <span class="text-sm">Live: 247 cars available across India</span>
+                    </div>
+                    <h1 class="hero-title text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
+                        Drive The <span class="gradient-text">Future</span> Today
+                    </h1>
+                    <p class="text-lg text-[var(--text-secondary)] mb-8 max-w-xl">
+                        India's most premium digital showroom. Experience 360° views, AI car finder, instant UPI token booking & pan India delivery.
+                    </p>
+                    
+                    <!-- Instagram Stories Style Reels -->
+                    <div class="flex gap-4 mb-8 overflow-x-auto pb-2">
+                        <div class="story-reel cursor-pointer" data-reel="1">
+                            <div class="story-ring rounded-full w-16 h-16 flex items-center justify-center">
+                                <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=100&h=100&fit=crop" class="w-14 h-14 rounded-full object-cover" alt="New Arrival">
+                            </div>
+                            <p class="text-xs mt-1 text-center">New</p>
+                        </div>
+                        <div class="story-reel cursor-pointer" data-reel="2">
+                            <div class="story-ring rounded-full w-16 h-16 flex items-center justify-center">
+                                <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=100&h=100&fit=crop" class="w-14 h-14 rounded-full object-cover" alt="Offers">
+                            </div>
+                            <p class="text-xs mt-1 text-center">Offers</p>
+                        </div>
+                        <div class="story-reel cursor-pointer" data-reel="3">
+                            <div class="story-ring rounded-full w-16 h-16 flex items-center justify-center">
+                                <img src="https://images.unsplash.com/photo-1542282088-fe8426682b8f?w=100&h=100&fit=crop" class="w-14 h-14 rounded-full object-cover" alt="Reviews">
+                            </div>
+                            <p class="text-xs mt-1 text-center">Reviews</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-4">
+                        <button id="bookTestDriveHero" class="px-8 py-4 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-2)] rounded-xl font-semibold hover:scale-105 transition transform">
+                            Book Test Drive
+                        </button>
+                        <button id="aiCarFinderBtn" class="px-8 py-4 glass rounded-xl font-semibold hover:bg-[var(--card)] transition flex items-center gap-2">
+                            <i data-lucide="sparkles" class="w-5 h-5"></i>
+                            AI Car Finder
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 3D Car View Container -->
+                <div class="relative animate-float">
+                    <div id="car3d" class="w-full h-[400px] md:h-[500px] rounded-2xl glass overflow-hidden"></div>
+                    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 glass px-4 py-2 rounded-full text-sm flex items-center gap-2">
+                        <i data-lucide="rotate-3d" class="w-4 h-4"></i>
+                        Drag to rotate 360°
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+            <i data-lucide="chevrons-down" class="w-6 h-6 text-[var(--text-secondary)]"></i>
+        </div>
+    </section>
+
+    <!-- AI Car Finder + RC Check Bar -->
+    <section class="py-8 bg-[var(--bg-secondary)] border-y border-[var(--border)]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="glass rounded-xl p-4 flex items-center gap-4">
+                    <i data-lucide="search" class="w-5 h-5 text-[var(--accent)]"></i>
+                    <input type="text" id="aiSearchInput" placeholder="Try: 'SUV under 30L for family in Mumbai'" class="flex-1 bg-transparent outline-none text-sm">
+                    <button id="aiSearchBtn" class="px-4 py-2 bg-[var(--accent)] rounded-lg text-white text-sm font-medium">Find</button>
+                </div>
+                <div class="glass rounded-xl p-4 flex items-center gap-4">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-[var(--accent-2)]"></i>
+                    <input type="text" id="rcInput" placeholder="Enter RC number: DL01AB1234" class="flex-1 bg-transparent outline-none text-sm uppercase">
+                    <button id="rcCheckBtn" class="px-4 py-2 bg-[var(--accent-2)] rounded-lg text-white text-sm font-medium">Check RC</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Cars -->
+    <section id="featured" class="py-20 bg-[var(--bg)]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Featured <span class="gradient-text">Collection</span></h2>
+                <p class="text-[var(--text-secondary)] max-w-2xl mx-auto">Curated premium cars with verified history, warranty & pan India delivery</p>
+            </div>
+            
+            <!-- Filters -->
+            <div class="flex flex-wrap gap-3 mb-8 justify-center">
+                <button class="filter-btn px-6 py-2 rounded-full glass active" data-filter="all">All</button>
+                <button class="filter-btn px-6 py-2 rounded-full glass" data-filter="suv">SUV</button>
+                <button class="filter-btn px-6 py-2 rounded-full glass" data-filter="sedan">Sedan</button>
+                <button class="filter-btn px-6 py-2 rounded-full glass" data-filter="electric">Electric</button>
+                <button class="filter-btn px-6 py-2 rounded-full glass" data-filter="luxury">Luxury</button>
+            </div>
+            
+            <div id="carGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Cars will be rendered here -->
+            </div>
+            
+            <div class="text-center mt-12">
+                <button id="compareBtn" class="px-8 py-4 glass rounded-xl font-semibold hover:bg-[var(--card)] transition">
+                    Compare Cars (0/3)
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- EMI Calculator -->
+    <section id="calculator" class="py-20 bg-[var(--bg-secondary)]">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">EMI <span class="gradient-text">Calculator</span></h2>
+                <p class="text-[var(--text-secondary)]">Calculate your monthly payment in seconds</p>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div class="glass rounded-2xl p-8">
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <label class="text-sm font-medium">Car Price</label>
+                                <span class="text-[var(--accent)] font-semibold">₹<span id="priceVal">25,00,000</span></span>
+                            </div>
+                            <input type="range" id="priceSlider" min="500000" max="20000000" step="50000" value="2500000" class="range-slider w-full">
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <label class="text-sm font-medium">Down Payment</label>
+                                <span class="text-[var(--accent)] font-semibold">₹<span id="downVal">5,00,000</span></span>
+                            </div>
+                            <input type="range" id="downSlider" min="0" max="2500000" step="25000" value="500000" class="range-slider w-full">
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <label class="text-sm font-medium">Loan Tenure</label>
+                                <span class="text-[var(--accent)] font-semibold"><span id="tenureVal">5</span> Years</span>
+                            </div>
+                            <input type="range" id="tenureSlider" min="1" max="7" step="1" value="5" class="range-slider w-full">
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <label class="text-sm font-medium">Interest Rate</label>
+                                <span class="text-[var(--accent)] font-semibold"><span id="rateVal">8.5</span>%</span>
+                            </div>
+                            <input type="range" id="rateSlider" min="7" max="15" step="0.1" value="8.5" class="range-slider w-full">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass rounded-2xl p-8 flex flex-col justify-center">
+                    <div class="text-center mb-8">
+                        <p class="text-[var(--text-secondary)] mb-2">Your Monthly EMI</p>
+                        <div class="text-5xl font-bold gradient-text mb-4">₹<span id="emiResult">39,795</span></div>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div class="glass rounded-lg p-4">
+                                <p class="text-[var(--text-secondary)]">Principal</p>
+                                <p class="font-semibold">₹<span id="principalAmt">20,00,000</span></p>
+                            </div>
+                            <div class="glass rounded-lg p-4">
+                                <p class="text-[var(--text-secondary)]">Total Interest</p>
+                                <p class="font-semibold">₹<span id="interestAmt">3,87,700</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="w-full py-4 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-2)] rounded-xl font-semibold hover:scale-105 transition">
+                        Apply For Loan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Test Drive Booking -->
+    <section id="testdrive" class="py-20 bg-[var(--bg)]">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass rounded-3xl overflow-hidden">
+                <div class="grid lg:grid-cols-2">
+                    <div class="p-8 md:p-12">
+                        <h2 class="text-4xl font-bold mb-6">Book a <span class="gradient-text">Test Drive</span></h2>
+                        <p class="text-[var(--text-secondary)] mb-8">Experience your dream car at your doorstep or nearest showroom. Free pickup & drop available.</p>
+                        
+                        <form id="testDriveForm" class="space-y-4">
+                            <div class="grid sm:grid-cols-2 gap-4">
+                                <input type="text" placeholder="Full Name" required class="w-full px-4 py-3 rounded-lg bg-[var(--bg)] border border-[var(--border)] outline-none focus:border-[var(--accent)]">
+                                <input type="tel" placeholder="Phone Number" required class="w-full px-4 py-3 rounded-lg bg-[var(--bg)] border border-[var(--border)] outline-none focus:border-[var(--accent)]">
+                            </div>
+                            <input type="email" placeholder="Email Address" required class="w-full px-4 py-3 rounded-lg bg-[var(--bg)] border border-[var(--border)] outline-none focus:border-[var(--accent)]">
+                            <select required class="w-full px-4 py-3 rounded-lg bg-[var(--bg)] border border-[var(--border)] outline-none focus:border-[var(--accent)]">
+                                <option value="">Select Car Model</option>
+                                <option>Mercedes-Benz GLE</option>
+                                <option>BMW X5</option>
+                                <option>Audi Q7</option>
+                                <option>Tesla Model Y</option>
+                            </select>
+                            <div class="grid sm:grid-cols-2 gap-4">
+                                <select required class="w-full px-4 py-3 rounded-lg bg-[var(--bg)] border border-[var(--border)] outline-none focus:border-[var(--accent)]">
+                                    <option value="">City</option>
+                                    <option>Delhi NCR</option>
+                                    <option>Mumbai</option>
+                                    <option>Bangalore</option>
+                                    <option>Hyderabad</option>
+                                    <option>Chennai</option>
+                                    <option>Pune</option>
+                                </select>
+                                <input type="date" required class="w-full px-4 py-3 rounded-lg bg-[var(--bg)] border border-[var(--border)] outline-none focus:border-[var(--accent)]">
+                            </div>
+                            <button type="submit" class="w-full py-4 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-2)] rounded-xl font-semibold hover:scale-105 transition">
+                                Schedule Test Drive
+                            </button>
+                        </form>
+                    </div>
+                    <div class="relative min-h-[400px] lg:min-h-0">
+                        <img src="https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&q=80" alt="Test Drive" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[var(--bg)] via-transparent to-transparent lg:bg-gradient-to-r"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Customer Testimonial Reels -->
+    <section id="testimonials" class="py-20 bg-[var(--bg-secondary)]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Customer <span class="gradient-text">Stories</span></h2>
+                <p class="text-[var(--text-secondary)]">See why 10,000+ customers trust AutoVogue</p>
+            </div>
+            
+            <div class="flex gap-4 overflow-x-auto pb-4 snap-x">
+                <div class="min-w-[300px] snap-center glass rounded-2xl overflow-hidden">
+                    <video class="w-full h-64 object-cover" poster="https://images.unsplash.com/photo-1622393135288-832db79c5858?w=600&q=80">
+                        <source src="https://cdn.coverr.co/videos/coverr-man-driving-a-car-9006/1080p.mp4" type="video/mp4">
+                    </video>
+                    <div class="p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <img src="https://i.pravatar.cc/100?img=12" class="w-10 h-10 rounded-full" alt="Customer">
+                            <div>
+                                <p class="font-semibold">Rahul Sharma</p>
+                                <p class="text-xs text-[var(--text-secondary)]">Delhi • BMW X5</p>
+                            </div>
+                        </div>
+                        <p class="text-sm text-[var(--text-secondary)]">"Seamless experience! Got my dream car delivered in 3 days with complete paper work."</p>
+                    </div>
+                </div>
+                
+                <div class="min-w-[300px] snap-center glass rounded-2xl overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=600&q=80" class="w-full h-64 object-cover" alt="Testimonial">
+                    <div class="p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <img src="https://i.pravatar.cc/100?img=5" class="w-10 h-10 rounded-full" alt="Customer">
+                            <div>
+                                <p class="font-semibold">Priya Mehta</p>
+                                <p class="text-xs text-[var(--text-secondary)]">Mumbai • Audi Q7</p>
+                            </div>
+                        </div>
+                        <p class="text-sm text-[var(--text-secondary)]">"UPI token booking was instant. Transparent pricing, no hidden charges!"</p>
+                    </div>
+                </div>
+                
+                <div class="min-w-[300px] snap-center glass rounded-2xl overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600&q=80" class="w-full h-64 object-cover" alt="Testimonial">
+                    <div class="p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <img src="https://i.pravatar.cc/100?img=33" class="w-10 h-10 rounded-full" alt="Customer">
+                            <div>
+                                <p class="font-semibold">Arjun Reddy</p>
+                                <p class="text-xs text-[var(--text-secondary)]">Bangalore • Tesla Model 3</p>
+                            </div>
+                        </div>
+                        <p class="text-sm text-[var(--text-secondary)]">"AI car finder matched me perfectly. Love the 360° view feature before booking."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sell Your Car -->
+    <section id="sell" class="py-20 bg-[var(--bg)]">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Sell Your <span class="gradient-text">Car</span></h2>
+                <p class="text-[var(--text-secondary)]">Get best price in 30 minutes. Free doorstep evaluation.</p>
+            </div>
+            
+            <form id="sellCarForm" class="glass rounded-2xl p-8 space-y-6">
+                <div class="grid md:grid-cols-3 gap-4">
+                    <input type="text" placeholder="Car Brand" required class="px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)] outline-none focus:border-[var(--accent)]">
+                    <input type="text" placeholder="Model" required class="px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)] outline-none focus:border-[var(--accent)]">
+                    <input type="number" placeholder="Year" required class="px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)] outline-none focus:border-[var(--accent)]">
+                </div>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <input type="text" placeholder="Registration No." required class="px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)] outline-none focus:border-[var(--accent)]">
+                    <input type="number" placeholder="KM Driven" required class="px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)] outline-none focus:border-[var(--accent)]">
+                    <select required class="px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)] outline-none focus:border-[var(--accent)]">
+                        <option value="">City</option>
+                        <option>Delhi NCR</option>
+                        <option>Mumbai</option>
+                        <option>Bangalore</option>
+                        <option>Hyderabad</option>
+                    </select>
+                </div>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <input type="text" placeholder="Your Name" required class="px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)] outline-none focus:border-[var(--accent)]">
+                    <input type="tel" placeholder="Phone Number" required class="px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)] outline-none focus:border-[var(--accent)]">
+                </div>
+                
+                <div class="border-2 border-dashed border-[var(--border)] rounded-xl p-8 text-center">
+                    <i data-lucide="upload-cloud" class="w-12 h-12 mx-auto mb-4 text-[var(--accent)]"></i>
+                    <p class="text-[var(--text-secondary)] mb-2">Upload car photos & RC copy</p>
+                    <input type="file" multiple accept="image/*" class="hidden" id="carPhotos">
+                    <label for="carPhotos" class="inline-block px-6 py-2 glass rounded-lg cursor-pointer hover:bg-[var(--card)] transition text-sm">
+                        Choose Files
+                    </label>
+                </div>
+                
+                <button type="submit" class="w-full py-4 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-2)] rounded-xl font-semibold hover:scale-105 transition">
+                    Get Free Evaluation
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Referral System -->
+    <section class="py-20 bg-[var(--bg-secondary)]">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass rounded-3xl p-8 md:p-12 text-center">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent)]/10 border border-[var(--accent)]/30 mb-6">
+                    <i data-lucide="gift" class="w-4 h-4 text-[var(--accent)]"></i>
+                    <span class="text-sm font-medium text-[var(--accent)]">Refer & Earn Program</span>
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Earn ₹25,000 Per <span class="gradient-text">Referral</span></h2>
+                <p class="text-[var(--text-secondary)] mb-8 max-w-2xl mx-auto">Invite friends & family to AutoVogue. When they buy a car, you get cash reward + they get exclusive discount.</p>
+                
+                <div class="grid md:grid-cols-3 gap-6 mb-8">
+                    <div class="glass rounded-xl p-6">
+                        <div class="w-12 h-12 bg-[var(--accent)]/10 rounded-xl flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="share-2" class="w-6 h-6 text-[var(--accent)]"></i>
+                        </div>
+                        <h3 class="font-semibold mb-2">1. Share Link</h3>
+                        <p class="text-sm text-[var(--text-secondary)]">Share your unique referral link</p>
+                    </div>
+                    <div class="glass rounded-xl p-6">
+                        <div class="w-12 h-12 bg-[var(--accent)]/10 rounded-xl flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="shopping-cart" class="w-6 h-6 text-[var(--accent)]"></i>
+                        </div>
+                        <h3 class="font-semibold mb-2">2. They Buy</h3>
+                        <p class="text-sm text-[var(--text-secondary)]">Friend purchases any car</p>
+                    </div>
+                    <div class="glass rounded-xl p-6">
+                        <div class="w-12 h-12 bg-[var(--accent)]/10 rounded-xl flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="wallet" class="w-6 h-6 text-[var(--accent)]"></i>
+                        </div>
+                        <h3 class="font-semibold mb-2">3. You Earn</h3>
+                        <p class="text-sm text-[var(--text-secondary)]">Get ₹25K credited instantly</p>
+                    </div>
+                </div>
+                
+                <button id="referralBtn" class="px-8 py-4 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-2)] rounded-xl font-semibold hover:scale-105 transition">
+                    Get Your Referral Link
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="py-20 bg-[var(--bg)]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12">
+                <div>
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6">Visit Our <span class="gradient-text">Showrooms</span></h2>
+                    <p class="text-[var(--text-secondary)] mb-8">Pan India presence with 15+ premium showrooms. Book an appointment or walk-in.</p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 bg-[var(--accent)]/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="map-pin" class="w-6 h-6 text-[var(--accent)]"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold mb-1">Delhi NCR Headquarters</h3>
+                                <p class="text-sm text-[var(--text-secondary)]">DLF Cyber City, Gurgaon, Haryana 122002</p>
+                            </div>
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 bg-[var(--accent)]/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="phone" class="w-6 h-6 text-[var(--accent)]"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold mb-1">Call Us</h3>
+                                <p class="text-sm text-[var(--text-secondary)]">+91 98765 43210 (Toll Free)</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 bg-[var(--accent)]/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="mail" class="w-6 h-6 text-[var(--accent)]"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold mb-1">Email</h3>
+                                <p class="text-sm text-[var(--text-secondary)]">hello@autovogue.in</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 flex gap-4">
+                        <a href="#" class="w-10 h-10 glass rounded-lg flex items-center justify-center hover:bg-[var(--card)] transition">
+                            <i data-lucide="instagram" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 glass rounded-lg flex items-center justify-center hover:bg-[var(--card)] transition">
+                            <i data-lucide="youtube" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 glass rounded-lg flex items-center justify-center hover:bg-[var(--card)] transition">
+                            <i data-lucide="linkedin" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <form class="glass rounded-2xl p-8 space-y-4">
+                    <input type="text" placeholder="Your Name" required class="w-full px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)] outline-none focus:border-[var(--accent)]">
+                    <input type="email" placeholder="Email Address" required class="w-full px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)] outline-none focus:border-[var(--accent)]">
+                    <input type="tel" placeholder="Phone Number" required class="w-full px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)] outline-none focus:border-[var(--accent)]">
+                    <textarea placeholder="Your Message" rows="4" required class="w-full px-4 py-3 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)] outline-none focus:border-[var(--accent)] resize-none"></textarea>
+                    <button type="submit" class="w-full py-4 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-2)] rounded-xl font-semibold hover:scale-105 transition">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[var(--bg-secondary)] border-t border-[var(--border)] py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="text-2xl font-bold gradient-text mb-4">AutoVogue</div>
+                    <p class="text-sm text-[var(--text-secondary)]">India's most premium digital car marketplace. Experience luxury redefined.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Quick Links</h4>
+                    <div class="space-y-2 text-sm text-[var(--text-secondary)]">
+                        <a href="#" class="block hover:text-[var(--accent)]">Browse Cars</a>
+                        <a href="#" class="block hover:text-[var(--accent)]">Sell Your Car</a>
+                        <a href="#" class="block hover:text-[var(--accent)]">EMI Calculator</a>
+                        <a href="#" class="block hover:text-[var(--accent)]">RC Check</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Cities</h4>
+                    <div class="space-y-2 text-sm text-[var(--text-secondary)]">
+                        <a href="#" class="block hover:text-[var(--accent)]">Cars in Delhi</a>
+                        <a href="#" class="block hover:text-[var(--accent)]">Cars in Mumbai</a>
+                        <a href="#" class="block hover:text-[var(--accent)]">Cars in Bangalore</a>
+                        <a href="#" class="block hover:text-[var(--accent)]">Cars in Hyderabad</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Legal</h4>
+                    <div class="space-y-2 text-sm text-[var(--text-secondary)]">
+                        <a href="#" class="block hover:text-[var(--accent)]">Privacy Policy</a>
+                        <a href="#" class="block hover:text-[var(--accent)]">Terms & Conditions</a>
+                        <a href="#" class="block hover:text-[var(--accent)]">Refund Policy</a>
+                        <a href="#" class="block hover:text-[var(--accent)]">Disclaimer</a>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-[var(--border)] flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-[var(--text-secondary)]">
+                <p>© 2024 AutoVogue India. All rights reserved.</p>
+                <p>Made with ❤️ in India</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Chat Button -->
+    <a href="https://wa.me/919876543210" target="_blank" class="fixed bottom-6 right-6 w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition z-40" style="animation: pulse-ring 2s infinite;">
+        <i data-lucide="message-circle" class="w-7 h-7 text-white"></i>
+    </a>
+
+    <!-- Modals -->
+    
+    <!-- Admin Login Modal -->
+    <div id="adminModal" class="modal">
+        <div class="glass rounded-2xl p-8 max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold">Admin Login</h3>
+                <button class="modal-close p-2 hover:bg-[var(--card)] rounded-lg">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <form id="adminLoginForm" class="space-y-4">
+                <input type="text" placeholder="Username" value="admin" class="w-full px-4 py-3 rounded-lg bg-[var(--bg)] border border-[var(--border)] outline-none focus:border-[var(--accent)]">
+                <input type="password" placeholder="Password" value="admin123" class="w-full px-4 py-3 rounded-lg bg-[var(--bg)] border border-[var(--border)] outline-none focus:border-[var(--accent)]">
+                <button type="submit" class="w-full py-3 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-2)] rounded-xl font-semibold">Login</button>
+                <p class="text-xs text-center text-[var(--text-secondary)]">Demo: admin / admin123</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Panel Modal -->
+    <div id="adminPanelModal" class="modal">
+        <div class="glass rounded-2xl p-6 max-w-6xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold">Admin Control Panel</h3>
+                <button class="modal-close p-2 hover:bg-[var(--card)] rounded-lg">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <div class="grid md:grid-cols-4 gap-4 mb-6">
+                <div class="glass rounded-xl p-4 text-center">
+                    <p class="text-3xl font-bold gradient-text">247</p>
+                    <p class="text-sm text-[var(--text-secondary)]">Total Cars</p>
+                </div>
+                <div class="glass rounded-xl p-4 text-center">
+                    <p class="text-3xl font-bold gradient-text">89</p>
+                    <p class="text-sm text-[var(--text-secondary)]">Leads This Month</p>
+                </div>
+                <div class="glass rounded-xl p-4 text-center">
+                    <p class="text-3xl font-bold gradient-text">₹2.1Cr</p>
+                    <p class="text-sm text-[var(--text-secondary)]">Revenue</p>
+                </div>
+                <div class="glass rounded-xl p-4 text-center">
+                    <p class="text-3xl font-bold gradient-text">34</p>
+                    <p class="text-sm text-[var(--text-secondary)]">Test Drives</p>
+                </div>
+            </div>
+            
+            <div class="flex gap-3 mb-6 flex-wrap">
+                <button class="admin-tab px-4 py-2 rounded-lg bg-[var(--accent)] text-white" data-tab="inventory">Inventory</button>
+                <button class="admin-tab px-4 py-2 rounded-lg glass" data-tab="banners">Banners</button>
+                <button class="admin-tab px-4 py-2 rounded-lg glass" data-tab="leads">Leads CRM</button>
+                <button class="admin-tab px-4 py-2 rounded-lg glass" data-tab="offers">Offers</button>
+            </div>
+            
+            <div id="inventoryTab" class="admin-content">
+                <div class="mb-4 flex justify-between items-center">
+                    <h4 class="font-semibold">Car Inventory</h4>
+                    <button class="px-4 py-2 bg-[var(--accent)] rounded-lg text-white text-sm">+ Add New Car</button>
+                </div>
+                <div class="glass rounded-xl overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="border-b border-[var(--border)]">
+                            <tr>
+                                <th class="text-left p-4">Car</th>
+                                <th class="text-left p-4">Price</th>
+                                <th class="text-left p-4">Status</th>
+                                <th class="text-left p-4">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-[var(--border)]">
+                                <td class="p-4">Mercedes-Benz GLE</td>
+                                <td class="p-4">₹98,50,000</td>
+                                <td class="p-4"><span class="px-3 py-1 bg-green-500/20 text-green-500 rounded-full text-xs">Active</span></td>
+                                <td class="p-4">
+                                    <button class="text-[var(--accent)] mr-3">Edit</button>
+                                    <button class="text-red-500">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Compare Modal -->
+    <div id="compareModal" class="modal">
+        <div class="glass rounded-2xl p-6 max-w-5xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold">Compare Cars</h3>
+                <button class="modal-close p-2 hover:bg-[var(--card)] rounded-lg">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div id="compareContent" class="grid md:grid-cols-3 gap-4">
+                <p class="col-span-3 text-center text-[var(--text-secondary)] py-12">Select up to 3 cars to compare</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Modal with Razorpay -->
+    <div id="bookingModal" class="modal">
+        <div class="glass rounded-2xl p-8 max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold">Book with UPI</h3>
+                <button class="modal-close p-2 hover:bg-[var(--card)] rounded-lg">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="text-center mb-6">
+                <p class="text-sm text-[var(--text-secondary)] mb-2">Token Amount</p>
+                <p class="text-4xl font-bold gradient-text">₹25,000</p>
+                <p class="text-xs text-[var(--text-secondary)] mt-2">Fully refundable within 7 days</p>
+            </div>
+            <form id="razorpayForm" class="space-y-4">
+                <input type="text" placeholder="Full Name" required class="w-full px-4 py-3 rounded-lg bg-[var(--bg)] border border-[var(--border)] outline-none focus:border-[var(--accent)]">
+                <input type="tel" placeholder="Phone Number" required class="w-full px-4 py-3 rounded-lg bg-[var(--bg)] border border-[var(--border)] outline-none focus:border-[var(--accent)]">
+                <input type="email" placeholder="Email" required class="w-full px-4 py-3 rounded-lg bg-[var(--bg)] border border-[var(--border)] outline-none focus:border-[var(--accent)]">
+                <button type="submit" class="w-full py-4 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-2)] rounded-xl font-semibold flex items-center justify-center gap-2">
+                    <i data-lucide="smartphone" class="w-5 h-5"></i>
+                    Pay with UPI
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast glass rounded-xl p-4 max-w-sm">
+        <div class="flex items-center gap-3">
+            <i data-lucide="check-circle" class="w-5 h-5 text-green-500"></i>
+            <p id="toastMsg" class="text-sm"></p>
+        </div>
+    </div>
+
+<script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+    
+    // Cars Database
+    const cars = [
+        {
+            id: 1,
+            name: "Mercedes-Benz GLE 450",
+            type: "suv",
+            price: 9850000,
+            km: 12000,
+            year: 2023,
+            fuel: "Petrol",
+            transmission: "Automatic",
+            image: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600&q=80",
+            badge: "Certified"
+        },
+        {
+            id: 2,
+            name: "BMW X5 xDrive40i",
+            type: "suv",
+            price: 9280000,
+            km: 8500,
+            year: 2023,
+            fuel: "Petrol",
+            transmission: "Automatic",
+            image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&q=80",
+            badge: "Hot Deal"
+        },
+        {
+            id: 3,
+            name: "Tesla Model Y",
+            type: "electric",
+            price: 6500000,
+            km: 5000,
+            year: 2024,
+            fuel: "Electric",
+            transmission: "Automatic",
+            image: "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=600&q=80",
+            badge: "New"
+        },
+        {
+            id: 4,
+            name: "Audi Q7 Premium Plus",
+            type: "suv",
+            price: 8740000,
+            km: 15000,
+            year: 2022,
+            fuel: "Diesel",
+            transmission: "Automatic",
+            image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=600&q=80",
+            badge: "Luxury"
+        },
+        {
+            id: 5,
+            name: "Mercedes E-Class",
+            type: "sedan",
+            price: 7820000,
+            km: 20000,
+            year: 2023,
+            fuel: "Petrol",
+            transmission: "Automatic",
+            image: "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=600&q=80",
+            badge: "Certified"
+        },
+        {
+            id: 6,
+            name: "BMW iX Electric",
+            type: "electric",
+            price: 12100000,
+            km: 3000,
+            year: 2024,
+            fuel: "Electric",
+            transmission: "Automatic",
+            image: "https://images.unsplash.com/photo-1655185187855-2a3e5ccca717?w=600&q=80",
+            badge: "New"
+        }
+    ];
+    
+    let compareList = [];
+    let currentFilter = 'all';
+    
+    // Render Cars
+    function renderCars(filter = 'all') {
+        const carGrid = document.getElementById('carGrid');
+        const filtered = filter === 'all' ? cars : cars.filter(c => c.type === filter || c.badge.toLowerCase() === filter);
+        
+        carGrid.innerHTML = filtered.map(car => `
+            <div class="car-card glass rounded-2xl overflow-hidden group hover:scale-105 transition transform duration-300" data-type="${car.type}">
+                <div class="relative">
+                    <img src="${car.image}" alt="${car.name}" class="w-full h-56 object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute top-3 left-3">
+                        <span class="px-3 py-1 rounded-full text-xs font-medium ${car.badge === 'New' ? 'bg-green-500' : car.badge === 'Hot Deal' ? 'bg-red-500' : 'bg-[var(--accent)]'} text-white">
+                            ${car.badge}
+                        </span>
+                    </div>
+                    <button onclick="toggleCompare(${car.id})" class="absolute top-3 right-3 w-10 h-10 glass rounded-full flex items-center justify-center hover:bg-[var(--accent)] transition compare-toggle" data-id="${car.id}">
+                        <i data-lucide="plus" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2">${car.name}</h3>
+                    <div class="flex items-center gap-4 text-sm text-[var(--text-secondary)] mb-4">
+                        <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-4 h-4"></i>${car.year}</span>
+                        <span class="flex items-center gap-1"><i data-lucide="gauge" class="w-4 h-4"></i>${(car.km/1000).toFixed(1)}k km</span>
+                        <span class="flex items-center gap-1"><i data-lucide="fuel" class="w-4 h-4"></i>${car.fuel}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-[var(--text-secondary)]">From</p>
+                            <p class="text-2xl font-bold gradient-text">₹${(car.price/100000).toFixed(1)}L</p>
+                        </div>
+                        <button onclick="openBooking(${car.id})" class="px-6 py-3 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-2)] rounded-xl font-semibold text-sm hover:scale-105 transition">
+                            Book Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        
+        lucide.createIcons();
+        VanillaTilt.init(document.querySelectorAll('.car-card'), {
+            max: 5,
+            speed: 400,
+            glare: true,
+            'max-glare': 0.2
+        });
+    }
+    
+    renderCars();
+    
+    // Filter Buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active', 'bg-[var(--accent)]', 'text-white'));
+            this.classList.add('active', 'bg-[var(--accent)]', 'text-white');
+            currentFilter = this.dataset.filter;
+            renderCars(currentFilter);
+        });
+    });
+    
+    // Compare Functionality
+    window.toggleCompare = function(id) {
+        const idx = compareList.indexOf(id);
+        if (idx > -1) {
+            compareList.splice(idx, 1);
+        } else if (compareList.length < 3) {
+            compareList.push(id);
+        } else {
+            showToast('You can compare maximum 3 cars', 'warning');
+            return;
+        }
+        updateCompareUI();
+    };
+    
+    function updateCompareUI() {
+        document.querySelectorAll('.compare-toggle').forEach(btn => {
+            const id = parseInt(btn.dataset.id);
+            if (compareList.includes(id)) {
+                btn.innerHTML = '<i data-lucide="check" class="w-5 h-5"></i>';
+                btn.classList.add('bg-[var(--accent)]');
+            } else {
+                btn.innerHTML = '<i data-lucide="plus" class="w-5 h-5"></i>';
+                btn.classList.remove('bg-[var(--accent)]');
+            }
+        });
+        lucide.createIcons();
+        document.getElementById('compareBtn').textContent = `Compare Cars (${compareList.length}/3)`;
+    }
+    
+    document.getElementById('compareBtn').addEventListener('click', () => {
+        if (compareList.length < 2) {
+            showToast('Select at least 2 cars to compare', 'warning');
+            return;
+        }
+        const compareContent = document.getElementById('compareContent');
+        const selectedCars = cars.filter(c => compareList.includes(c.id));
+        
+        compareContent.innerHTML = `
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-[var(--border)]">
+                        <th class="text-left p-4">Feature</th>
+                        ${selectedCars.map(c => `<th class="text-center p-4">${c.name}</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-[var(--border)]">
+                        <td class="p-4 font-medium">Price</td>
+                        ${selectedCars.map(c => `<td class="text-center p-4 gradient-text font-bold">₹${(c.price/100000).toFixed(1)}L</td>`).join('')}
+                    </tr>
+                    <tr class="border-b border-[var(--border)]">
+                        <td class="p-4 font-medium">Year</td>
+                        ${selectedCars.map(c => `<td class="text-center p-4">${c.year}</td>`).join('')}
+                    </tr>
+                    <tr class="border-b border-[var(--border)]">
+                        <td class="p-4 font-medium">KM Driven</td>
+                        ${selectedCars.map(c => `<td class="text-center p-4">${(c.km/1000).toFixed(1)}k km</td>`).join('')}
+                    </tr>
+                    <tr class="border-b border-[var(--border)]">
+                        <td class="p-4 font-medium">Fuel Type</td>
+                        ${selectedCars.map(c => `<td class="text-center p-4">${c.fuel}</td>`).join('')}
+                    </tr>
+                    <tr>
+                        <td class="p-4 font-medium">Action</td>
+                        ${selectedCars.map(c => `<td class="text-center p-4"><button onclick="openBooking(${c.id}); closeModal('compareModal')" class="px-4 py-2 bg-[var(--accent)] rounded-lg text-white text-xs">Book</button></td>`).join('')}
+                    </tr>
+                </tbody>
+            </table>
+        `;
+        openModal('compareModal');
+    });
+    
+    // EMI Calculator
+    const priceSlider = document.getElementById('priceSlider');
+    const downSlider = document.getElementById('downSlider');
+    const tenureSlider = document.getElementById('tenureSlider');
+    const rateSlider = document.getElementById('rateSlider');
+    
+    function calculateEMI() {
+        const P = parseInt(priceSlider.value) - parseInt(downSlider.value);
+        const R = parseFloat(rateSlider.value) / 12 / 100;
+        const N = parseInt(tenureSlider.value) * 12;
+        
+        const emi = (P * R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
+        const total = emi * N;
+        const interest = total - P;
+        
+        document.getElementById('priceVal').textContent = parseInt(priceSlider.value).toLocaleString('en-IN');
+        document.getElementById('downVal').textContent = parseInt(downSlider.value).toLocaleString('en-IN');
+        document.getElementById('tenureVal').textContent = tenureSlider.value;
+        document.getElementById('rateVal').textContent = rateSlider.value;
+        document.getElementById('emiResult').textContent = Math.round(emi).toLocaleString('en-IN');
+        document.getElementById('principalAmt').textContent = P.toLocaleString('en-IN');
+        document.getElementById('interestAmt').textContent = Math.round(interest).toLocaleString('en-IN');
+        
+        downSlider.max = priceSlider.value;
+    }
+    
+    [priceSlider, downSlider, tenureSlider, rateSlider].forEach(slider => {
+        slider.addEventListener('input', calculateEMI);
+    });
+    calculateEMI();
+    
+    // Theme Toggle
+    document.getElementById('themeToggle').addEventListener('click', function() {
+        const body = document.body;
+        const currentTheme = body.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        body.setAttribute('data-theme', newTheme);
+        this.innerHTML = newTheme === 'dark' ? '<i data-lucide="sun" class="w-5 h-5"></i>' : '<i data-lucide="moon" class="w-5 h-5"></i>';
+        lucide.createIcons();
+    });
+    
+    // Mobile Menu
+    document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+        document.getElementById('mobileMenu').classList.toggle('hidden');
+    });
+    
+    // Modal Functions
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+    }
+    
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+    }
+    
+    window.closeModal = closeModal;
+    
+    document.querySelectorAll('.modal-close').forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.closest('.modal').classList.remove('active');
+        });
+    });
+    
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) this.classList.remove('active');
+        });
+    });
+    
+    // Admin Functions
+    document.getElementById('adminBtn').addEventListener('click', () => openModal('adminModal'));
+    document.getElementById('adminBtnMobile').addEventListener('click', () => openModal('adminModal'));
+    
+    document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        closeModal('adminModal');
+        openModal('adminPanelModal');
+        showToast('Welcome to Admin Panel', 'success');
+    });
+    
+    document.querySelectorAll('.admin-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('bg-[var(--accent)]', 'text-white'));
+            this.classList.add('bg-[var(--accent)]', 'text-white');
+        });
+    });
+    
+    // Booking Functions
+    window.openBooking = function(carId) {
+        openModal('bookingModal');
+    };
+    
+    document.getElementById('razorpayForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        showToast('Redirecting to Razorpay UPI...', 'success');
+        setTimeout(() => {
+            closeModal('bookingModal');
+            showToast('Payment successful! Booking confirmed.', 'success');
+        }, 2000);
+    });
+    
+    // Forms
+    document.getElementById('testDriveForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        showToast('Test drive booked successfully! We will contact you.', 'success');
+        this.reset();
+    });
+    
+    document.getElementById('sellCarForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        showToast('Your car details submitted! Our team will evaluate in 30 mins.', 'success');
+        this.reset();
+    });
+    
+    document.getElementById('bookTestDriveHero').addEventListener('click', () => {
+        document.getElementById('testdrive').scrollIntoView({ behavior: 'smooth' });
+    });
+    
+    // AI Car Finder
+    document.getElementById('aiSearchBtn').addEventListener('click', function() {
+        const query = document.getElementById('aiSearchInput').value;
+        if (!query) return;
+        showToast('AI finding best matches for: ' + query, 'success');
+        setTimeout(() => {
+            renderCars('suv');
+            document.getElementById('featured').scrollIntoView({ behavior: 'smooth' });
+        }, 1000);
+    });
+    
+    document.getElementById('aiCarFinderBtn').addEventListener('click', () => {
+        document.getElementById('aiSearchInput').focus();
+    });
+    
+    // RC Check
+    document.getElementById('rcCheckBtn').addEventListener('click', function() {
+        const rc = document.getElementById('rcInput').value;
+        if (!rc) {
+            showToast('Please enter RC number', 'warning');
+            return;
+        }
+        showToast('Checking RC details...', 'success');
+        setTimeout(() => {
+            showToast('RC Verified ✓ No pending challans', 'success');
+        }, 1500);
+    });
+    
+    // Referral
+    document.getElementById('referralBtn').addEventListener('click', function() {
+        const link = 'https://autovogue.in/ref/USER123';
+        navigator.clipboard.writeText(link);
+        showToast('Referral link copied! Share & earn ₹25,000', 'success');
+    });
+    
+    // Story Reels
+    document.querySelectorAll('.story-reel').forEach(reel => {
+        reel.addEventListener('click', function() {
+            showToast('Opening story reel...', 'success');
+            this.querySelector('.story-ring').classList.add('seen');
+        });
+    });
+    
+    // Toast Function
+    function showToast(msg, type = 'success') {
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toastMsg');
+        toastMsg.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+    
+    // 3D Car View with Three.js
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const car3dContainer = document.getElementById('car3d');
+    
+    function init3D() {
+        if (!car3dContainer) return;
+        
+        renderer.setSize(car3dContainer.clientWidth, car3dContainer.clientHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        car3dContainer.appendChild(renderer.domElement);
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(5, 5, 5);
+        scene.add(directionalLight);
+        
+        const pointLight = new THREE.PointLight(0x6E56CF, 1, 100);
+        pointLight.position.set(-5, 5, 5);
+        scene.add(pointLight);
+        
+        // Simple Car Model (Box representation)
+        const carGroup = new THREE.Group();
+        
+        // Car Body
+        const bodyGeometry = new THREE.BoxGeometry(4, 1.5, 2);
+        const bodyMaterial = new THREE.MeshPhongMaterial({ 
+            color: 0x6E56CF,
+            shininess: 100
+        });
+        const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+        body.position.y = 1;
+        carGroup.add(body);
+        
+        // Car Top
+        const topGeometry = new THREE.BoxGeometry(2.5, 1, 1.8);
+        const topMaterial = new THREE.MeshPhongMaterial({ 
+            color: 0x5B42C2,
+            shininess: 100
+        });
+        const top = new THREE.Mesh(topGeometry, topMaterial);
+        top.position.set(-0.3, 2.25, 0);
+        carGroup.add(top);
+        
+        // Wheels
+        const wheelGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.3, 32);
+        const wheelMaterial = new THREE.MeshPhongMaterial({ color: 0x1a1a1a });
+        
+        const wheelPositions = [
+            [-1.3, 0.5, 1.1],
+            [1.3, 0.5, 1.1],
+            [-1.3, 0.5, -1.1],
+            [1.3, 0.5, -1.1]
+        ];
+        
+        wheelPositions.forEach(pos => {
+            const wheel = new THREE.Mesh(wheelGeometry, wheelMaterial);
+            wheel.rotation.z = Math.PI / 2;
+            wheel.position.set(...pos);
+            carGroup.add(wheel);
+        });
+        
+        scene.add(carGroup);
+        camera.position.set(7, 4, 7);
+        camera.lookAt(0, 1, 0);
+        
+        // Mouse Controls
+        let mouseX = 0, mouseY = 0;
+        let targetRotationX = 0, targetRotationY = 0;
+        
+        car3dContainer.addEventListener('mousemove', (e) => {
+            const rect = car3dContainer.getBoundingClientRect();
+            mouseX = (e.clientX - rect.left) / rect.width - 0.5;
+            mouseY = (e.clientY - rect.top) / rect.height - 0.5;
+            targetRotationY = mouseX * Math.PI;
+            targetRotationX = mouseY * Math.PI * 0.5;
+        });
+        
+        // Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            carGroup.rotation.y += (targetRotationY - carGroup.rotation.y) * 0.05;
+            carGroup.rotation.x += (targetRotationX - carGroup.rotation.x) * 0.05;
+            carGroup.rotation.y += 0.002;
+            
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+        
+        // Resize Handler
+        window.addEventListener('resize', () => {
+            camera.aspect = car3dContainer.clientWidth / car3dContainer.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(car3dContainer.clientWidth, car3dContainer.clientHeight);
+        });
+    }
+    
+    init3D();
+    
+    // Parallax Effect
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        document.querySelectorAll('.parallax').forEach(el => {
+            const speed = el.dataset.speed || 0.5;
+            el.style.transform = `translateY(${scrolled * speed}px)`;
+        });
+    });
+    
+    // Smooth Scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                document.getElementById('mobileMenu').classList.add('hidden');
+            }
+        });
+    });
+    
+    // Intersection Observer for Animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-fadeInUp');
+            }
+        });
+    }, observerOptions);
+    
+    document.querySelectorAll('section').forEach(section => {
+        observer.observe(section);
+    });
+</script>
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+</body>
+</html>
